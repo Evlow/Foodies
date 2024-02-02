@@ -6,6 +6,6 @@ namespace Foodies.Api.Data.Models
     {
         public DateTime Ddn { get; set; }
 
-        public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+        public ICollection<Recipe> Recipe { get; set; } = new List<Recipe>();
     }
 }

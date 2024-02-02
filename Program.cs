@@ -1,6 +1,8 @@
 using Foodies.Api.Common.Services;
 using Foodies.Api.Data;
 using Foodies.Api.Data.Models;
+using Foodies.Api.IoC.IoCApplication;
+using Foodies.Api.IoC.IoCTest;
 using Foodies.Common.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,9 +16,32 @@ var builder = WebApplication.CreateBuilder(args);
 
 IConfiguration configuration = builder.Configuration;
 
-// configure database
-var connectionString = configuration.GetConnectionString("BddConnection");
-builder.Services.AddDbContext<FoodiesDBContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+if (builder.Environment.IsEnvironment("Test"))
+{
+    // Configure Database connection
+    builder.Services.ConfigureDBContextTest();
+
+    //Dependency Injection
+    builder.Services.ConfigureInjectionDependencyRepositoryTest();
+
+    builder.Services.ConfigureInjectionDependencyServiceTest();
+}
+else
+{
+    // Configure Database connexion
+    builder.Services.ConfigureDBContext(configuration);
+
+    //Dependency Injection
+    builder.Services.ConfigureInjectionDependencyRepository();
+
+    builder.Services.ConfigureInjectionDependencyService();
+}
+
+//// configure database
+//var connectionString = configuration.GetConnectionString("BddConnection");
+//builder.Services.AddDbContext<FoodiesDBContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddAutoMapper(typeof(Program));
 
 // For Identity
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -58,6 +83,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Add services to the container.
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -92,6 +118,14 @@ builder.Services.AddSwaggerGen
     }
 );
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("_myAllowSpecificOrigins",
+        builder => builder.WithOrigins("http://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -104,6 +138,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("_myAllowSpecificOrigins");
 
 app.MapControllers();
 
