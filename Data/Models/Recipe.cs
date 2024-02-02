@@ -6,7 +6,7 @@
         public string RecipeTitle { get; set; }
 
         // Foreign key property
-        public string RecipeUserId { get; set; }
+        public string RecipeUserName { get; set; }
 
 
         // Navigation property
