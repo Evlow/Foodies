@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Foodies.Api.Business.AutoMapper;
 using Foodies.Api.Business.DTOs;
 using Foodies.Api.Business.Services.interfaces;
 using Foodies.Api.Data.Models;
@@ -66,14 +65,13 @@ namespace Foodies.Api.Business.Services
         /// <param name="unity">L'unité à créer.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception">Il existe déjà une unité de mesure du même nom !!</exception>
-        public async Task<UserDTO> CreateUserAsync(UserDTO user)
+        public async Task<UserDTO> CreateUserAsync(UserDTO userDTO)
         {
-            var isExiste = await CheckUserNameExisteAsync(user.UserName).ConfigureAwait(false);
+            var isExiste = await CheckUserNameExisteAsync(userDTO.UserName).ConfigureAwait(false);
             if (isExiste)
                 throw new Exception("Il existe déjà une unité de mesure du même nom !!");
 
-            var userToAdd = UserMapper.TransformDTOToEntity(user);
-
+            var userToAdd = _mapper.Map<User>(userDTO);
             var userAdded = await _userRepository.CreateUserAsync(userToAdd).ConfigureAwait(false);
 
             return _mapper.Map<UserDTO>(userAdded);

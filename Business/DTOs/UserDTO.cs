@@ -4,19 +4,20 @@ namespace Foodies.Api.Business.DTOs
 {
     public class UserDTO
     {
-        public string Id { get; set; }
         public string? UserName { get; set; }
-        public string? RecipeUserName { get; set; }
+        public string UserId { get; set; }
         public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
 
-        public IEnumerable<Recipe> GetRecipesAsync()
+        //public List<Recipe> Recipes { get; set; }
+        public IEnumerable<Recipe> GetRecipesByUserIdAsync()
         {
             // Filtrer les recettes en fonction de l'ID de l'utilisateur
-            return Recipes.Where(recipe => UserName == UserName);
+            return Recipes.Where(recipe => recipe.UserId == UserId);
         }
         //public virtual ICollection<Comment> Comments { get; set; }
         //public virtual ICollection<Favori> Favoris { get; set; }
+
         public virtual ICollection<Recipe> Recipes { get; set; }
+
     }
 }

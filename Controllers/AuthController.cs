@@ -14,6 +14,7 @@ using Foodies.Api.Buisness.DTO.Auth;
 using Foodies.Api.Common.Models;
 using Foodies.Api.Buisness.DTO.Auth.Login;
 using Foodies.Api.Common.Services;
+using Org.BouncyCastle.Bcpg;
 
 namespace Foodies.Api.Controllers
 {
@@ -60,7 +61,7 @@ namespace Foodies.Api.Controllers
                 if (!result.Succeeded)
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError,
-                        new Response { Status = "Error", Message = "User not created" });
+                        new Response { Status = "Error", Message = "Le mot de passse doit contenir au moins 6 caractères dont au moins 1 majuscule et 1 caractère spécial." });
                 }
 
                 // add role to the user
@@ -130,7 +131,8 @@ namespace Foodies.Api.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
-                    expiration = jwtToken.ValidTo
+                    expiration = jwtToken.ValidTo,
+                    userId = user.Id,
                 });
             }
             return Unauthorized();

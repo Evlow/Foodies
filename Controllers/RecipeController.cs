@@ -20,11 +20,13 @@ namespace Foodies.Api.Controllers
             private readonly IRecipeService _recipeService;
             private readonly UserManager<User> _userManager;
 
-        public RecipeController(IRecipeService recipeService, UserManager<User> userManager)
+        public RecipeController(IRecipeService recipeService, UserManager<User> userManager, ILogger<RecipeController> logger)
         {
             _recipeService = recipeService ?? throw new ArgumentNullException(nameof(recipeService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
+
+
 
 
 
@@ -76,13 +78,14 @@ namespace Foodies.Api.Controllers
         /// <param name="Recipe">les données de l'recette à créer</param>
         /// <returns></returns>
         [HttpPost]
-            [Authorize(AuthenticationSchemes = "Bearer")]
-            [ProducesResponseType(typeof(RecipeDTO), 200)]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [ProducesResponseType(typeof(RecipeDTO), 200)]
             public async Task<ActionResult> CreateRecipeAsync([FromBody] RecipeDTO recipe)
             {
+
                 if (string.IsNullOrWhiteSpace(recipe.RecipeTitle))
                 {
-                    return Problem("Echec : nous avons un nom de recette de mesure vide !!");
+                    return Problem("Echec : le titre de la recette ne peut pas être vide !");
                 }
 
                 try
@@ -115,7 +118,7 @@ namespace Foodies.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(recipe.RecipeTitle))
             {
-                return Problem("Echec : nous avons un nom d'recette de mesure vide !!");
+                return Problem("Echec :le titre de la recette ne peut pas être vide !");
             }
 
             try
@@ -143,7 +146,7 @@ namespace Foodies.Api.Controllers
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(typeof(RecipeDTO), 200)]
-        public async Task<ActionResult> DeleteRecipeyAsync(int id)
+        public async Task<ActionResult> DeleteRecipeAsync(int id)
         {
             try
             {
@@ -180,29 +183,22 @@ namespace Foodies.Api.Controllers
             }
 
         }
-        [HttpGet("{userName}")]
+        [HttpGet]
         [Authorize]
         [ProducesResponseType(typeof(List<RecipeDTO>), 200)]
-        public async Task<IActionResult> GetRecipesByUserNameAsync(string userName)
+        public async Task<IActionResult> GetRecipesByUserIdAsync(string userId)
         {
-            Console.WriteLine("current Username : " + User.FindFirstValue(ClaimTypes.Name));
-            var currentUser = User.FindFirstValue(ClaimTypes.Name);
+            Console.WriteLine("current Id : " + User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (currentUser == userName)
-            {
+                var recipesByUserId = await _recipeService.GetRecipesByUserIdAsync(userId).ConfigureAwait(false);
 
-                    var recipesByUserName = await _recipeService.GetRecipesByUserNameAsync(userName).ConfigureAwait(false);
-
-                    return Ok(recipesByUserName);
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status401Unauthorized);
-            }
-
+                return Ok(recipesByUserId);
 
 
         }
 
-    }
+        }
+
+
     }

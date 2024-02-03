@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Foodies.Api.Migrations
 {
-    public partial class initial : Migration
+    public partial class initMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,7 +38,6 @@ namespace Foodies.Api.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Ddn = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
@@ -80,36 +79,6 @@ namespace Foodies.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.CategoryId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Ingredients",
-                columns: table => new
-                {
-                    IngredientId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    IngredientName = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ingredients", x => x.IngredientId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Unities",
-                columns: table => new
-                {
-                    UnityId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UnityName = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Unities", x => x.UnityId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -253,11 +222,9 @@ namespace Foodies.Api.Migrations
                     RecipeCreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RecipeUpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     RecipeStarNote = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
-                    RecipeUserName = table.Column<string>(type: "longtext", nullable: false)
+                    UserId = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(50)", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -266,7 +233,8 @@ namespace Foodies.Api.Migrations
                         name: "FK_Recipes_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Recipes_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -302,72 +270,15 @@ namespace Foodies.Api.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
-                name: "Preparations",
-                columns: table => new
-                {
-                    PreparationId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RecipeId = table.Column<int>(type: "int", nullable: false),
-                    PreparationEtape = table.Column<int>(type: "int", nullable: false),
-                    PreparationDescription = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Preparations", x => x.PreparationId);
-                    table.ForeignKey(
-                        name: "FK_Preparations_Recipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "Recipes",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "RecipeIngredients",
-                columns: table => new
-                {
-                    RecipeIngredienId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    RecipeId = table.Column<int>(type: "int", nullable: false),
-                    IngredientId = table.Column<int>(type: "int", nullable: false),
-                    UnityId = table.Column<int>(type: "int", nullable: true),
-                    RecipeIngredientQuantity = table.Column<decimal>(type: "decimal(65,30)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RecipeIngredients", x => x.RecipeIngredienId);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Ingredients_IngredientId",
-                        column: x => x.IngredientId,
-                        principalTable: "Ingredients",
-                        principalColumn: "IngredientId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Recipes_RecipeId",
-                        column: x => x.RecipeId,
-                        principalTable: "Recipes",
-                        principalColumn: "RecipeId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_RecipeIngredients_Unities_UnityId",
-                        column: x => x.UnityId,
-                        principalTable: "Unities",
-                        principalColumn: "UnityId");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "51040700-0e9c-4698-87a1-667c19163f33", "1", "Admin", "Admin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "bbee0650-4086-4b57-8939-0701e180a711", "2", "User", "User" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ca422f84-190a-4fe3-b7f3-63928376e766", "1", "Admin", "Admin" });
+                values: new object[] { "d2620122-1d02-41a3-ae50-7f7ea0eb2985", "2", "User", "User" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -417,26 +328,6 @@ namespace Foodies.Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Preparations_RecipeId",
-                table: "Preparations",
-                column: "RecipeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_IngredientId",
-                table: "RecipeIngredients",
-                column: "IngredientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_RecipeId",
-                table: "RecipeIngredients",
-                column: "RecipeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RecipeIngredients_UnityId",
-                table: "RecipeIngredients",
-                column: "UnityId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Recipes_CategoryId",
                 table: "Recipes",
                 column: "CategoryId");
@@ -468,22 +359,10 @@ namespace Foodies.Api.Migrations
                 name: "Favoris");
 
             migrationBuilder.DropTable(
-                name: "Preparations");
-
-            migrationBuilder.DropTable(
-                name: "RecipeIngredients");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Ingredients");
-
-            migrationBuilder.DropTable(
                 name: "Recipes");
-
-            migrationBuilder.DropTable(
-                name: "Unities");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

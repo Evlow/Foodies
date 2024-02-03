@@ -49,6 +49,12 @@ namespace Foodies.Api.Data.Repositories
                 .ConfigureAwait(false);
         }
 
+        //public async Task<User> GetUserAndRecipesAsync(string userId)
+        //{
+        //    return await _dBContext.Users
+        //        .Include(u=>u.Recipes)
+        //        .FirstOrDefaultAsync
+        //}
         /// <summary>
         /// Cette méthode permet de récupérer les informations d'un utilisateur par email
         /// </summary>

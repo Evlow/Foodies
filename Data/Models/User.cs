@@ -4,8 +4,11 @@ namespace Foodies.Api.Data.Models
 {
     public class User : IdentityUser
     {
-        public DateTime Ddn { get; set; }
 
-        public ICollection<Recipe> Recipe { get; set; } = new List<Recipe>();
+        public List<Recipe> Recipes { get; set; }
+
+    // Navigation property
+
+    //public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }

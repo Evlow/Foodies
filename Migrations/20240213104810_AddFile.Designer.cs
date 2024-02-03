@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    [Migration("20240202150951_initial")]
-    partial class initial
+    [Migration("20240213104810_AddFile")]
+    partial class AddFile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,42 +56,6 @@ namespace Foodies.Api.Migrations
                     b.ToTable("Favoris");
                 });
 
-            modelBuilder.Entity("Foodies.Api.Data.Models.Ingredient", b =>
-                {
-                    b.Property<int>("IngredientId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("IngredientName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("IngredientId");
-
-                    b.ToTable("Ingredients");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.Preparation", b =>
-                {
-                    b.Property<int>("PreparationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("PreparationDescription")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("PreparationEtape")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PreparationId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("Preparations");
-                });
-
             modelBuilder.Entity("Foodies.Api.Data.Models.Recipe", b =>
                 {
                     b.Property<int>("RecipeId")
@@ -100,6 +64,54 @@ namespace Foodies.Api.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("IngredientN1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN3")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN4")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN5")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN6")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN7")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("IngredientN8")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN1")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN2")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN3")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN4")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN5")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN6")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN7")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PreparationN8")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RecipeCreatedAt")
                         .HasColumnType("datetime(6)");
@@ -117,11 +129,8 @@ namespace Foodies.Api.Migrations
                     b.Property<DateTime?>("RecipeUpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("RecipeUserName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("RecipeId");
@@ -131,49 +140,6 @@ namespace Foodies.Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Recipes");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.RecipeIngredient", b =>
-                {
-                    b.Property<int>("RecipeIngredienId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("IngredientId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("RecipeIngredientQuantity")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int?>("UnityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RecipeIngredienId");
-
-                    b.HasIndex("IngredientId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.HasIndex("UnityId");
-
-                    b.ToTable("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.Unity", b =>
-                {
-                    b.Property<int>("UnityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("UnityName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("UnityId");
-
-                    b.ToTable("Unities");
                 });
 
             modelBuilder.Entity("Foodies.Api.Data.Models.User", b =>
@@ -187,9 +153,6 @@ namespace Foodies.Api.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Ddn")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -271,14 +234,14 @@ namespace Foodies.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ca422f84-190a-4fe3-b7f3-63928376e766",
+                            Id = "095f7aec-09b0-4cbe-b716-cc83093fbf22",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "bbee0650-4086-4b57-8939-0701e180a711",
+                            Id = "03e955ec-b3c7-4ffd-99c7-8809b1461263",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"
@@ -390,7 +353,7 @@ namespace Foodies.Api.Migrations
             modelBuilder.Entity("Foodies.Api.Data.Models.Favori", b =>
                 {
                     b.HasOne("Foodies.Api.Data.Models.Recipe", "Recipe")
-                        .WithMany("Favoris")
+                        .WithMany()
                         .HasForeignKey("RecipeId");
 
                     b.HasOne("Foodies.Api.Data.Models.User", "User")
@@ -402,17 +365,6 @@ namespace Foodies.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Foodies.Api.Data.Models.Preparation", b =>
-                {
-                    b.HasOne("Foodies.Api.Data.Models.Recipe", "Recipe")
-                        .WithMany("Preparations")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Recipe");
-                });
-
             modelBuilder.Entity("Foodies.Api.Data.Models.Recipe", b =>
                 {
                     b.HasOne("Foodies.Api.Data.Models.Category", "Category")
@@ -422,37 +374,14 @@ namespace Foodies.Api.Migrations
                         .IsRequired();
 
                     b.HasOne("Foodies.Api.Data.Models.User", "User")
-                        .WithMany("Recipe")
-                        .HasForeignKey("UserId");
+                        .WithMany("Recipes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.RecipeIngredient", b =>
-                {
-                    b.HasOne("Foodies.Api.Data.Models.Ingredient", "Ingredient")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("IngredientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Foodies.Api.Data.Models.Recipe", "Recipe")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Foodies.Api.Data.Models.Unity", "Unity")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("UnityId");
-
-                    b.Navigation("Ingredient");
-
-                    b.Navigation("Recipe");
-
-                    b.Navigation("Unity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -511,28 +440,9 @@ namespace Foodies.Api.Migrations
                     b.Navigation("Recipes");
                 });
 
-            modelBuilder.Entity("Foodies.Api.Data.Models.Ingredient", b =>
-                {
-                    b.Navigation("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.Recipe", b =>
-                {
-                    b.Navigation("Favoris");
-
-                    b.Navigation("Preparations");
-
-                    b.Navigation("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("Foodies.Api.Data.Models.Unity", b =>
-                {
-                    b.Navigation("RecipeIngredients");
-                });
-
             modelBuilder.Entity("Foodies.Api.Data.Models.User", b =>
                 {
-                    b.Navigation("Recipe");
+                    b.Navigation("Recipes");
                 });
 #pragma warning restore 612, 618
         }

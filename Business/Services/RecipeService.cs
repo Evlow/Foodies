@@ -82,12 +82,12 @@ namespace Foodies.Api.Business.Services
             return recipeGet != null;
         }
 
-        public async Task<List<RecipeDTO>> GetRecipesByUserNameAsync(string userName)
+        public async Task<List<RecipeDTO>> GetRecipesByUserIdAsync(string userId)
         {
-            var recipesByUserName = await _recipeRepository.GetRecipesByUserNameAsync(userName).ConfigureAwait(false);
-            List<RecipeDTO> listRecipeDTO = new List<RecipeDTO>(recipesByUserName.Count);
+            var recipesByUserId = await _recipeRepository.GetRecipesByUserIdAsync(userId).ConfigureAwait(false);
+            List<RecipeDTO> listRecipeDTO = new List<RecipeDTO>(recipesByUserId.Count);
 
-            foreach (var recipe in recipesByUserName)
+            foreach (var recipe in recipesByUserId)
             {
                 listRecipeDTO.Add(_mapper.Map<RecipeDTO>(recipe));
             }

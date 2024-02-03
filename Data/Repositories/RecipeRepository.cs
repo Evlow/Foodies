@@ -1,4 +1,6 @@
-﻿using Foodies.Api.Data.Models;
+﻿using AutoMapper;
+using Foodies.Api.Business.DTOs;
+using Foodies.Api.Data.Models;
 using Foodies.Api.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +12,13 @@ namespace Foodies.Api.Data.Repositories
         ///  Context de connexion à la base de données
         /// </summary>
         private readonly FoodiesDBContext _dBContext;
+        private readonly IMapper _mapper;
 
-        public RecipeRepository(FoodiesDBContext dBContext)
+        public RecipeRepository(FoodiesDBContext dBContext, IMapper mapper)
         {
-            _dBContext = dBContext;
+            _dBContext = dBContext ?? throw new ArgumentNullException(nameof(dBContext));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
 
         /// <summary>
         /// Cette méthode permet de créer une recettte.
@@ -24,6 +27,7 @@ namespace Foodies.Api.Data.Repositories
         /// <returns></returns>
         public async Task<Recipe> CreateRecipeAsync(Recipe recipe)
         {
+
             var elementAdded = await _dBContext.Recipes.AddAsync(recipe).ConfigureAwait(false);
             await _dBContext.SaveChangesAsync().ConfigureAwait(false);
             return elementAdded.Entity;
@@ -42,17 +46,17 @@ namespace Foodies.Api.Data.Repositories
 
 
         /// <summary>
-        /// Cette méthode permet de récupérer les informations d'une recette par son titre.
+        /// Cette méthode permet de récupérer les informations d'une recette par l'Id.
         /// </summary>
-        /// <param name="name">Le titre de la recette.</param>
+        /// <param name = "name" > Le titre de la recette.</param>
         /// <returns></returns>
-        public async Task<List<Recipe>> GetRecipesByUserNameAsync(string userName)
+        public async Task<List<Recipe>> GetRecipesByUserIdAsync(string userId)
         {
-            var recipesByUserName = await _dBContext.Recipes
-           .Where(r => r.UserName == userName)
+            var recipesByuserId = await _dBContext.Recipes
+           .Where(r => r.UserId == userId)
            .ToListAsync().ConfigureAwait(false);
 
-            return recipesByUserName;
+            return recipesByuserId;
         }
 
 

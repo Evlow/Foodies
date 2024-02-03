@@ -3,6 +3,7 @@ using System;
 using Foodies.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    partial class FoodiesDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240213104350_initMigration")]
+    partial class initMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,54 +64,6 @@ namespace Foodies.Api.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
-
-                    b.Property<string>("IngredientN1")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN2")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN3")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN4")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN5")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN6")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN7")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IngredientN8")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN1")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN2")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN3")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN4")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN5")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN6")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN7")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PreparationN8")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RecipeCreatedAt")
                         .HasColumnType("datetime(6)");
@@ -232,14 +186,14 @@ namespace Foodies.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "095f7aec-09b0-4cbe-b716-cc83093fbf22",
+                            Id = "51040700-0e9c-4698-87a1-667c19163f33",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "03e955ec-b3c7-4ffd-99c7-8809b1461263",
+                            Id = "d2620122-1d02-41a3-ae50-7f7ea0eb2985",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

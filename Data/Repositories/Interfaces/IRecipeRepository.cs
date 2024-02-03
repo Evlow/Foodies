@@ -18,7 +18,7 @@ namespace Foodies.Api.Data.Repositories.Interfaces
         /// <returns></returns>
         Task<Recipe> GetRecipeByTitleAsync(string title);
 
-        Task<List<Recipe>> GetRecipesByUserNameAsync(string userName);
+        Task<List<Recipe>> GetRecipesByUserIdAsync(string userId);
 
         /// <summary>
         /// Cette méthode permet de récupérer la liste de toutes les mesures.

@@ -45,8 +45,7 @@ namespace Foodies.Api.Business.Services.Interfaces
         /// <exception cref = "System.Exception" > Il n'existe aucune recette de mesure avec cet identifiant : {idRecipe}</exception>
         Task<RecipeDTO> DeleteRecipeAsync(int recipeId);
         Task<List<RecipeDTO>> GetRecipesByCategoryIdAsync(int categoryId);
-        Task<List<RecipeDTO>> GetRecipesByUserNameAsync(string userName);
-
+        Task<List<RecipeDTO>> GetRecipesByUserIdAsync(string userId);
 
     }
 }
