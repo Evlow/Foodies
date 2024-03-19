@@ -3,6 +3,7 @@ using System;
 using Foodies.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    partial class FoodiesDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240229100711_AddRecipePictureUrlNullFieldIntoRecipeTable")]
+    partial class AddRecipePictureUrlNullFieldIntoRecipeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

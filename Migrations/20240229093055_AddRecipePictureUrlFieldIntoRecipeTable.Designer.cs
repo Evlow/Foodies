@@ -3,6 +3,7 @@ using System;
 using Foodies.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    partial class FoodiesDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240229093055_AddRecipePictureUrlFieldIntoRecipeTable")]
+    partial class AddRecipePictureUrlFieldIntoRecipeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -116,6 +118,7 @@ namespace Foodies.Api.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PublicId")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("RecipeCreatedAt")
@@ -236,14 +239,14 @@ namespace Foodies.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eedab828-c292-4b36-8eab-2822791bfcf4",
+                            Id = "6fc80c93-6ba3-40a9-a95f-3d641c36dcba",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "ba7eef3b-b2b9-44ce-95ec-b56c02170365",
+                            Id = "6cacfa70-375c-499a-93b8-2da910329e6b",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

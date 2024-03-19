@@ -5,7 +5,12 @@ using Foodies.Api.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Security.Claims;
+using System;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
+using Foodies.Api.Commun.ImageService;
+using AutoMapper;
 
 namespace Foodies.Api.Controllers
 {
@@ -17,22 +22,27 @@ namespace Foodies.Api.Controllers
             /// <summary>
             ///  Le service de gestion des recettes de mesure
             /// </summary>
+            private readonly IFileService _fileService;
             private readonly IRecipeService _recipeService;
             private readonly UserManager<User> _userManager;
+            private readonly ImageService _imageService;
+            private readonly IMapper _mapper;
 
-        public RecipeController(IRecipeService recipeService, UserManager<User> userManager, ILogger<RecipeController> logger)
+        public RecipeController(IFileService fileService, IRecipeService recipeService, UserManager<User> userManager,
+            ImageService imageService, IMapper mapper)
         {
-            _recipeService = recipeService ?? throw new ArgumentNullException(nameof(recipeService));
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            _fileService = fileService;
+            _recipeService = recipeService;
+            _userManager = userManager;
+            _imageService = imageService;
+            _mapper = mapper;
         }
-
-
 
 
 
         //GET api/Recipes
         /// <summary>
-        /// Ressource pour récupérer la liste des recettes de mesure.
+        /// Ressource pour récupérer la liste des recettes.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -47,19 +57,20 @@ namespace Foodies.Api.Controllers
 
         // GET api/Recipes
         /// <summary>
-        /// Ressource pour récupérer la un Id d'une recette de mesure
+        /// Ressource pour récupérer la un Id d'une recette
         /// </summary>
         /// <returns></returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(RecipeDTO), 200)]
-        public async Task<ActionResult> RecipeId(int id)
+        [ProducesResponseType(typeof(Recipe), 200)]
+        public async Task<ActionResult> GetRecipeByRecipeId(int id)
         {
             try
-            {
-                var recipeId = await _recipeService.GetRecipeIdAsync(id).ConfigureAwait(false);
+            {   
+                var recipe = await _recipeService.GetRecipeIdAsync(id).ConfigureAwait(false);
+                
+                return Ok(recipe);
 
-                return Ok(recipeId);
             }
             catch (Exception e)
             {
@@ -70,39 +81,95 @@ namespace Foodies.Api.Controllers
             }
 
         }
+        // GET api/Recipes
+        /// <summary>
+        /// Ressource pour récupérer la un Id d'une recette
+        /// </summary>
+        /// <returns></returns>
+        //[HttpGet("{id}/image")]
+        //[AllowAnonymous]
+        //[ProducesResponseType(typeof(FileResult), 200)]
+        //public async Task<ActionResult> RecipeImageId(int id)
+        //{
+        //    try
+        //    {
+        //        var recipe = await _recipeService.GetRecipeIdAsync(id).ConfigureAwait(false);
+        //        if (recipe.RecipePicture.Length <= 0)
+        //        {
+        //            throw new Exception("Err invalid image");
+        //        }
+        //        MemoryStream ms = new (recipe.RecipePicture, false);
 
+        //        var result = new FileStreamResult(ms, "image/jpeg");
+        //        return result;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(new
+        //        {
+        //            Error = e.Message,
+        //        });
+        //    }
+
+        //}
         // POST api/Recipes
         /// <summary>
-        /// Ressource pour créer une nouvelle recette de mesure.
+        /// Ressource pour créer une nouvelle recette.
         /// </summary>
-        /// <param name="Recipe">les données de l'recette à créer</param>
+        /// <param name="Recipe">les données de la recette à créer</param>
         /// <returns></returns>
         [HttpPost]
         [Authorize(AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(typeof(RecipeDTO), 200)]
-            public async Task<ActionResult> CreateRecipeAsync([FromBody] RecipeDTO recipe)
+        public async Task<ActionResult<RecipeDTO>> CreateRecipeAsync([FromForm] RecipeDTO recipeDto)
+        {
+
+            try
             {
+                var recipe = _mapper.Map<Recipe>(recipeDto);
 
                 if (string.IsNullOrWhiteSpace(recipe.RecipeTitle))
                 {
                     return Problem("Echec : le titre de la recette ne peut pas être vide !");
                 }
 
-                try
+                if(recipeDto.RecipePicture != null)
                 {
-                    var recipeAdded = await _recipeService.CreateRecipeAsync(recipe).ConfigureAwait(false);
+                    var imageResult = await _imageService.AddImageAsync(recipeDto.RecipePicture);
 
+                    if (imageResult.Error != null)
+                        return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
+
+                    recipe.PictureUrl = imageResult.SecureUri.ToString();
+                    recipe.PublicId = imageResult.PublicId;
+                }
+
+                var userSID = User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Sid);
+                if (userSID == null)
+                {
+                    return Problem("L'id est pas bon");
+                }
+                recipe.UserId = userSID.Value;
+
+                var recipeAdded = await _recipeService.CreateRecipeAsync(recipe).ConfigureAwait(false);
+
+                if (recipeAdded != null)
+                {
                     return Ok(recipeAdded);
                 }
-                catch (Exception e)
+                else
                 {
-                    return BadRequest(new
-                    {
-                        Error = e.Message,
-                    });
+                    return BadRequest(new { Error = "Erreur lors de l'ajout de la recette." });
                 }
-
             }
+            catch (Exception e)
+            {
+                return BadRequest(new
+                {
+                    Error = e.Message,
+                });
+            }
+        }
 
         // PUT api/Recipes/1
         /// <summary>
@@ -114,18 +181,33 @@ namespace Foodies.Api.Controllers
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         [ProducesResponseType(typeof(RecipeDTO), 200)]
-        public async Task<ActionResult> UpdateRecipeAsync(int id, [FromBody] RecipeDTO recipe)
+        public async Task<ActionResult<RecipeDTO>>UpdateRecipeAsync(int id, [FromForm] RecipeDTO recipeDto)
         {
-            if (string.IsNullOrWhiteSpace(recipe.RecipeTitle))
-            {
-                return Problem("Echec :le titre de la recette ne peut pas être vide !");
-            }
 
             try
             {
-                var recipeUpdated = await _recipeService.UpdateRecipeAsync(id, recipe).ConfigureAwait(false);
+
+                if (string.IsNullOrWhiteSpace(recipeDto.RecipeTitle))
+                {
+                    return Problem("Echec :le titre de la recette ne peut pas être vide !");
+                }
+                var recipe = _mapper.Map<Recipe>(recipeDto);
+                if (recipeDto.RecipePicture != null)
+                {
+                    var imageResult = await _imageService.AddImageAsync(recipeDto.RecipePicture);
+
+                    if (imageResult.Error != null)
+                        return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
+
+                    recipe.PictureUrl = imageResult.SecureUri.ToString();
+                    recipe.PublicId = imageResult.PublicId;
+                }
+
+
+                var recipeUpdated = await _recipeService.updateRecipe(recipe);
 
                 return Ok(recipeUpdated);
+
             }
             catch (Exception e)
             {

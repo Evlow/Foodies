@@ -67,9 +67,10 @@ namespace Foodies.Api.Business.Services
         /// <exception cref="System.Exception">Il existe déjà une unité de mesure du même nom !!</exception>
         public async Task<UserDTO> CreateUserAsync(UserDTO userDTO)
         {
+
             var isExiste = await CheckUserNameExisteAsync(userDTO.UserName).ConfigureAwait(false);
             if (isExiste)
-                throw new Exception("Il existe déjà une unité de mesure du même nom !!");
+                throw new Exception("Il existe déjà un utilisateur avec ce nom !!");
 
             var userToAdd = _mapper.Map<User>(userDTO);
             var userAdded = await _userRepository.CreateUserAsync(userToAdd).ConfigureAwait(false);
@@ -91,6 +92,7 @@ namespace Foodies.Api.Business.Services
         /// </exception>
         public async Task<UserDTO> UpdateUserAsync(string userId, UserDTO user)
         {
+
             var isExiste = await CheckUserNameExisteAsync(user.UserName).ConfigureAwait(false);
             if (isExiste)
                 throw new Exception("Il existe déjà une unité de mesure du même nom !!");

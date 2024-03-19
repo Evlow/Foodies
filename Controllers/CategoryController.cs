@@ -13,14 +13,17 @@ namespace Foodies.Api.Controllers
         ///  Le service de gestion des categories de mesure
         /// </summary>
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<CategoryController> _logger;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnityController"/> class.
         /// </summary>
         /// <param name="unityService">The category service.</param>
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
+            _logger = logger;
         }
 
         // GET api/categorys
@@ -85,8 +88,11 @@ namespace Foodies.Api.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError("Echec de la création de la catégorie :", e);
+
                 return BadRequest(new
                 {
+
                     Error = e.Message,
                 });
             }

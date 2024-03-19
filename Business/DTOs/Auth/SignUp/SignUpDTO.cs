@@ -1,8 +1,8 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Foodies.Api.Buisness.DTO.Auth.SignUp
 {
+    // DTO pour l'inscription utilisateur
     public class SignUpDTO
     {
         [Required(ErrorMessage = "User Name is required")]

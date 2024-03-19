@@ -3,6 +3,7 @@ using System;
 using Foodies.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    partial class FoodiesDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240227130655_AddImage")]
+    partial class AddImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,10 +89,6 @@ namespace Foodies.Api.Migrations
                     b.Property<string>("IngredientN8")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PictureUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("PreparationN1")
                         .HasColumnType("longtext");
 
@@ -115,11 +113,14 @@ namespace Foodies.Api.Migrations
                     b.Property<string>("PreparationN8")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("RecipeCreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("RecipePicture")
+                        .HasColumnType("longtext");
+
+                    b.Property<byte[]>("RecipePictureData")
+                        .HasColumnType("longblob");
 
                     b.Property<decimal?>("RecipeStarNote")
                         .HasColumnType("decimal(65,30)");
@@ -236,14 +237,14 @@ namespace Foodies.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eedab828-c292-4b36-8eab-2822791bfcf4",
+                            Id = "0cb25001-d2cc-4d24-a936-98d383c40549",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "ba7eef3b-b2b9-44ce-95ec-b56c02170365",
+                            Id = "43f84fda-391b-4dcd-9351-b4913a16d797",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

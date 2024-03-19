@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Identity;
 
 namespace Foodies.Api.Data.Models
@@ -11,7 +12,10 @@ namespace Foodies.Api.Data.Models
         [Key]
         public int RecipeId { get; set; }
         public string RecipeTitle { get; set; }
-        public string? RecipePicture { get; set; }
+        public string PictureUrl { get; set; }
+
+        public string? PublicId { get; set; }
+
         public DateTime? RecipeCreatedAt { get; set; }
         public DateTime? RecipeUpdatedAt { get; set; }
         public decimal? RecipeStarNote { get; set; }
@@ -34,7 +38,9 @@ namespace Foodies.Api.Data.Models
         public string? PreparationN7 { get; set; }
         public string? PreparationN8 { get; set; }
 
+        [NotMapped]
 
+        public IFormFile ImageFile { get; set; }
         // Foreign Key for UserId
         [ForeignKey("User")]
         public string UserId { get; set; }

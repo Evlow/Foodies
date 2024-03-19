@@ -3,6 +3,7 @@ using System;
 using Foodies.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Foodies.Api.Migrations
 {
     [DbContext(typeof(FoodiesDBContext))]
-    partial class FoodiesDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240227134114_AddRecipePicture")]
+    partial class AddRecipePicture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,10 +89,6 @@ namespace Foodies.Api.Migrations
                     b.Property<string>("IngredientN8")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PictureUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("PreparationN1")
                         .HasColumnType("longtext");
 
@@ -115,11 +113,11 @@ namespace Foodies.Api.Migrations
                     b.Property<string>("PreparationN8")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("PublicId")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("RecipeCreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<byte[]>("RecipePicture")
+                        .HasColumnType("longblob");
 
                     b.Property<decimal?>("RecipeStarNote")
                         .HasColumnType("decimal(65,30)");
@@ -236,14 +234,14 @@ namespace Foodies.Api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eedab828-c292-4b36-8eab-2822791bfcf4",
+                            Id = "512b8515-1c41-4bbc-b570-cb831be77f79",
                             ConcurrencyStamp = "1",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         },
                         new
                         {
-                            Id = "ba7eef3b-b2b9-44ce-95ec-b56c02170365",
+                            Id = "f15136fb-0bfd-44fd-934e-3879b3957975",
                             ConcurrencyStamp = "2",
                             Name = "User",
                             NormalizedName = "User"

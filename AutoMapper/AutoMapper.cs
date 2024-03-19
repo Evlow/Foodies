@@ -1,17 +1,26 @@
 ﻿using AutoMapper;
 using Foodies.Api.Business.DTOs;
 using Foodies.Api.Data.Models;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Foodies.Api.AutoMapper
 {
+    public class ConverFile {
+        public byte[] Convert(RecipeDTO recipe)
+        {
+            var fileBase = recipe.RecipePicture;
 
-        public class AutoMapper : Profile
+            MemoryStream target = new MemoryStream();
+            fileBase.OpenReadStream().CopyTo(target);
+            return target.ToArray();
+        }
+
+    }
+    public class AutoMapper : Profile
         {
             public AutoMapper()
             {
             CreateMap<Category, CategoryDTO>().ReverseMap();
-            //CreateMap<Comment, CommentDTO>().ReverseMap();
-            //CreateMap<Favori, FavoriDTO>().ReverseMap();
             CreateMap<Recipe, RecipeDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
         }

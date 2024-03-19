@@ -2,8 +2,8 @@
 
 namespace Foodies.Api.Buisness.DTO.Auth.Login
 {
+    // DTO pour la connexion utilisateur
     public class LoginDTO
-
     {
         [Required(ErrorMessage = "User Name is required")]
         public string? Username { get; set; }
@@ -11,5 +11,4 @@ namespace Foodies.Api.Buisness.DTO.Auth.Login
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
     }
-
 }

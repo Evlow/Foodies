@@ -13,15 +13,21 @@ namespace Foodies.Api.Business.Services
         /// </summary>
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<CategoryService> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryService"/> class.
         /// </summary>
         /// <param name="categoryRepository">The category repository.</param>
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryService(
+            ICategoryRepository categoryRepository,
+            IMapper mapper,
+            ILogger<CategoryService> logger
+        )
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
@@ -41,33 +47,40 @@ namespace Foodies.Api.Business.Services
             return listCategoryDTO;
         }
 
-
         public async Task<CategoryDTO> GetCategoryIdAsync(int categoryId)
         {
-            var categoryGet = await _categoryRepository.GetCategoryByIdAsync(categoryId).ConfigureAwait(false);
+            var categoryGet = await _categoryRepository
+                .GetCategoryByIdAsync(categoryId)
+                .ConfigureAwait(false);
             return _mapper.Map<CategoryDTO>(categoryGet);
         }
-
-
 
         /// <summary>
         /// Cette méthode permet de créer une catégorie.
         /// </summary>
         /// <param name="category">La catégorie à créer.</param>
         /// <returns></returns>
-        /// <exception cref="System.Exception">Il existe déjà une categorie du même nom !!</exception>
+        /// <exception cref="System.Exception">Il existe déjà une categorie avec ce même nom !!</exception>
         public async Task<CategoryDTO> CreateCategoryAsync(CategoryDTO category)
         {
-            var isExiste = await CheckCategoryNameExisteAsync(category.CategoryName).ConfigureAwait(false);
+            _logger.LogInformation("Création d'une catégorie : {@CategoryToAdd}", category);
+
+            var isExiste = await CheckCategoryNameExisteAsync(category.CategoryName)
+                .ConfigureAwait(false);
             if (isExiste)
-                throw new Exception("Il existe déjà une categorie de mesure du même nom !");
+                throw new Exception("Il existe déjà une categorie avec ce même nom !");
 
             var categoryToAdd = _mapper.Map<Category>(category);
 
-            var categoryAdded = await _categoryRepository.CreateCategoryAsync(categoryToAdd).ConfigureAwait(false);
+            var categoryAdded = await _categoryRepository
+                .CreateCategoryAsync(categoryToAdd)
+                .ConfigureAwait(false);
+            _logger.LogInformation(
+                " Succcès de la création d'une catégorie : {@CategoryAdded}",
+                categoryAdded
+            );
 
             return _mapper.Map<CategoryDTO>(categoryAdded);
-
         }
 
         /// <summary>
@@ -83,20 +96,26 @@ namespace Foodies.Api.Business.Services
         /// </exception>
         public async Task<CategoryDTO> UpdateCategoryAsync(int categoryId, CategoryDTO category)
         {
-            var isExiste = await CheckCategoryNameExisteAsync(category.CategoryName).ConfigureAwait(false);
+            var isExiste = await CheckCategoryNameExisteAsync(category.CategoryName)
+                .ConfigureAwait(false);
             if (isExiste)
                 throw new Exception("Il existe déjà une categorie de mesure du même nom !!");
 
-            var categoryGet = await _categoryRepository.GetCategoryByIdAsync(categoryId).ConfigureAwait(false);
+            var categoryGet = await _categoryRepository
+                .GetCategoryByIdAsync(categoryId)
+                .ConfigureAwait(false);
             if (categoryGet == null)
-                throw new Exception($"Il n'existe aucune categorie de mesure avec cet identifiant : {categoryId}");
+                throw new Exception(
+                    $"Il n'existe aucune categorie de mesure avec cet identifiant : {categoryId}"
+                );
 
             categoryGet.CategoryName = category.CategoryName;
 
-            var categoryUpdated = await _categoryRepository.UpdateCategoryAsync(categoryGet).ConfigureAwait(false);
+            var categoryUpdated = await _categoryRepository
+                .UpdateCategoryAsync(categoryGet)
+                .ConfigureAwait(false);
 
             return _mapper.Map<CategoryDTO>(categoryUpdated);
-
         }
 
         /// <summary>
@@ -107,17 +126,20 @@ namespace Foodies.Api.Business.Services
         /// <exception cref="System.Exception">Il n'existe aucune categorie avec cet identifiant : {categoryId}</exception>
         public async Task<CategoryDTO> DeleteCategoryAsync(int categoryId)
         {
-            var categoryGet = await _categoryRepository.GetCategoryByIdAsync(categoryId).ConfigureAwait(false);
+            var categoryGet = await _categoryRepository
+                .GetCategoryByIdAsync(categoryId)
+                .ConfigureAwait(false);
             if (categoryGet == null)
-                throw new Exception($"Il n'existe aucune categorie de mesure avec cet identifiant : {categoryId}");
+                throw new Exception(
+                    $"Il n'existe aucune categorie de mesure avec cet identifiant : {categoryId}"
+                );
 
-            var categoryDeleted = await _categoryRepository.DeleteCategoryAsync(categoryGet).ConfigureAwait(false);
+            var categoryDeleted = await _categoryRepository
+                .DeleteCategoryAsync(categoryGet)
+                .ConfigureAwait(false);
 
             return _mapper.Map<CategoryDTO>(categoryDeleted);
         }
-
-
-
 
         /// <summary>
         /// Cette méthode permet de vérifier si une categorie existe déjà avec le même nom.
@@ -125,13 +147,11 @@ namespace Foodies.Api.Business.Services
         /// <param name="categoryName">le nom de l'categorie.</param>
         private async Task<bool> CheckCategoryNameExisteAsync(string categoryName)
         {
-            var categoryGet = await _categoryRepository.GetCategoryByNameAsync(categoryName).ConfigureAwait(false);
+            var categoryGet = await _categoryRepository
+                .GetCategoryByNameAsync(categoryName)
+                .ConfigureAwait(false);
 
             return categoryGet != null;
         }
-
-
-
-
     }
 }
